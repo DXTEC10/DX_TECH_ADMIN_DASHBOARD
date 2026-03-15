@@ -111,7 +111,7 @@ const ProductCard = ({ product, onDelete }: ProductCardProps) => {
 
         {/* Badge */}
         {product.badge && (
-          <span className="absolute top-2 left-2 bg-purple-600 text-white text-[9px] font-semibold px-2 py-0.5 rounded-full">
+          <span className="absolute top-2 left-2 bg-[#BB3C2D] text-white text-[9px] font-semibold px-2 py-0.5 rounded-full">
             {product.badge}
           </span>
         )}
@@ -126,7 +126,7 @@ const ProductCard = ({ product, onDelete }: ProductCardProps) => {
               <span className="text-xs text-gray-400 line-through">
                 {product.price}
               </span>
-              <span className="text-xs font-bold text-purple-600">
+              <span className="text-xs font-medium text-[#BB3C2D]">
                 {product.salePrice}
               </span>
             </>
