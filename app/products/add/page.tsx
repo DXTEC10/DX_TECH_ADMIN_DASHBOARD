@@ -370,7 +370,7 @@ export default function AddProductPage() {
                       <option value="DINNING_CHAIR">DINNING CHAIR</option>
                       <option value="OUTDOOR">OUTDOOR</option>
                       <option value="OFFICE_FURNITURE">OFFICE FURNITURE</option>
-                      <option value="TV_STAND">TV STANDS</option>
+                      <option value="TV_STANDS">TV STANDS</option>
                     </select>
                     <svg
                       className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
