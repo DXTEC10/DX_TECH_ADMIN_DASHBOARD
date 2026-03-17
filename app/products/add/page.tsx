@@ -371,7 +371,7 @@ export default function AddProductPage() {
                       <option value="PARLOR_SETS">DINNING SETS</option>
                       <option value="DINNING_CHAIR">DINNING CHAIR</option>
                       <option value="OUTDOOR">OUTDOOR</option>
-                      <option value="OFICE_FURNITURE">OFICE FURNITURE</option>
+                      <option value="OFFICE_FURNITURE">OFICE FURNITURE</option>
                       <option value="TV_STAND">TV STANDS</option>
                     </select>
                     <svg
