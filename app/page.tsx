@@ -10,6 +10,7 @@ import {
   deleteProduct,
   type Product,
 } from "@/libs/api/products";
+import Image from "next/image";
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -28,7 +29,7 @@ const StatCard = ({ label, value, color }: StatCardProps) => (
       <p className="text-2xl font-bold text-gray-800 mt-0.5">{value}</p>
     </div>
     <div
-      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${color}`}
+      className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${color}`}
     >
       <div className="w-4 h-4 rounded-full bg-white opacity-60" />
     </div>
@@ -142,47 +143,19 @@ const ProductCard = ({ product, onDelete }: ProductCardProps) => {
 };
 
 const TopBar = () => (
-  <header className="bg-white border-b border-gray-200 flex items-center px-5 h-11 sticky top-0 z-50">
+  <header className="bg-white border-b border-gray-200 flex items-center px-5 h-17 sticky top-0 z-50">
     <div className="flex items-center gap-1.5">
-      <div className="w-5 h-5 bg-purple-600 rounded flex items-center justify-center">
-        <span className="text-white text-[10px] font-bold">D</span>
+      <div className="rounded mr-6xl flex items-center">
+        <Image
+          src={"/dx-logo.jpeg"}
+          width={100}
+          height={100}
+          alt="Logo"
+          className="w-40 h-12 object-contain"
+        />
       </div>
-      <span className="font-bold text-gray-800 text-sm tracking-tight">
-        TEC
-      </span>
     </div>
-    <div className="ml-auto flex items-center gap-2">
-      <button className="w-7 h-7 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
-        <svg
-          className="w-3.5 h-3.5 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-      </button>
-      <button className="w-7 h-7 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
-        <svg
-          className="w-3.5 h-3.5 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-          />
-        </svg>
-      </button>
-    </div>
+    <div className="ml-auto flex items-center gap-2"></div>
   </header>
 );
 
@@ -291,7 +264,7 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-gray-50">
       <TopBar />
 
-      <div className="max-w-5xl mx-auto px-5 py-5">
+      <div className=" mx-auto max-w-6xl px-5 py-5">
         {/* Page Header */}
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -304,7 +277,7 @@ export default function ProductsPage() {
           </div>
           <Link
             href="/products/add"
-            className="inline-flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm shadow-purple-200"
+            className="inline-flex items-center gap-1.5 bg-[#752B8C]  text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm shadow-purple-200"
           >
             <svg
               className="w-3.5 h-3.5"
@@ -379,7 +352,7 @@ export default function ProductsPage() {
                   onClick={() => setActiveTab(tab)}
                   className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all ${
                     activeTab === tab
-                      ? "bg-purple-600 text-white shadow-sm"
+                      ? "bg-[#752B8C] text-white shadow-sm"
                       : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                   }`}
                 >
@@ -394,7 +367,7 @@ export default function ProductsPage() {
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
             <svg
-              className="w-4 h-4 flex-shrink-0"
+              className="w-4 h-4 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

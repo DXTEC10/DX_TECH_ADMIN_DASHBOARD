@@ -3,6 +3,7 @@
 import { useState, useRef, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createProduct } from "@/libs/api/products";
+import Image from "next/image";
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -129,46 +130,15 @@ const Toggle = ({ checked, onChange, label }: ToggleProps) => (
 );
 
 const TopBar = () => (
-  <header className="bg-white border-b border-gray-200 flex items-center px-5 h-11 sticky top-0 z-50">
-    <div className="flex items-center gap-1.5">
-      <div className="w-5 h-5 bg-purple-600 rounded flex items-center justify-center">
-        <span className="text-white text-[10px] font-bold">D</span>
-      </div>
-      <span className="font-bold text-gray-800 text-sm tracking-tight">
-        TEC
-      </span>
-    </div>
-    <div className="ml-auto flex items-center gap-2">
-      <button className="w-7 h-7 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
-        <svg
-          className="w-3.5 h-3.5 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-      </button>
-      <button className="w-7 h-7 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors">
-        <svg
-          className="w-3.5 h-3.5 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-          />
-        </svg>
-      </button>
+  <header className="bg-white border-b border-gray-200 flex items-center px-5 h-17 sticky top-0 z-50">
+    <div className="rounded mr-6xl flex items-center">
+      <Image
+        src={"/dx-logo.jpeg"}
+        width={100}
+        height={100}
+        alt="Logo"
+        className="w-40 h-12 object-contain"
+      />
     </div>
   </header>
 );
@@ -305,7 +275,7 @@ export default function AddProductPage() {
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
             <svg
-              className="w-4 h-4 flex-shrink-0"
+              className="w-4 h-4 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -365,7 +335,7 @@ export default function AddProductPage() {
                   placeholder="Enter product name"
                   value={form.name}
                   onChange={(e) => updateField("name", e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
+                  className="w-full text-black px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
                 />
               </div>
 
@@ -378,7 +348,7 @@ export default function AddProductPage() {
                   value={form.description}
                   onChange={(e) => updateField("description", e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 resize-none placeholder-gray-300 transition-all"
+                  className="w-full text-black  px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 resize-none placeholder-gray-300 transition-all"
                 />
               </div>
 
@@ -394,11 +364,15 @@ export default function AddProductPage() {
                       className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 appearance-none transition-all text-gray-500"
                     >
                       <option value="">Select category</option>
-                      <option value="SOFA_SET">Sofa Set</option>
-                      <option value="DINING_SET">Dining Set</option>
-                      <option value="BEDROOM_SET">Bedroom Set</option>
-                      <option value="PARLOR_SET">Parlor Set</option>
-                      <option value="DECOR">Decor</option>
+                      <option value="SOFA_SET">BEDROOM SETS</option>
+                      <option value="DINING_SET">BLINDS</option>
+                      <option value="BEDROOM_SET">RIGID LOCK</option>
+                      <option value="PARLOR_SET">CENTER TABLE</option>
+                      <option value="PARLOR_SET">DINNING SETS</option>
+                      <option value="PARLOR_SET">DINNING CHAIR</option>
+                      <option value="DECOR">OUTDOOR</option>
+                      <option value="DECOR">OFICE FURNITURE</option>
+                      <option value="DECOR">TV STANDS</option>
                     </select>
                     <svg
                       className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
@@ -425,7 +399,7 @@ export default function AddProductPage() {
                     placeholder="e.g. New, Hot, Sale"
                     value={form.badge}
                     onChange={(e) => updateField("badge", e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
+                    className="w-full text-black  px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
                   />
                 </div>
               </div>
@@ -480,7 +454,7 @@ export default function AddProductPage() {
                   placeholder="e.g. ₦650,000"
                   value={form.price}
                   onChange={(e) => updateField("price", e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
+                  className="w-full text-black px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
                 />
               </div>
 
@@ -494,7 +468,7 @@ export default function AddProductPage() {
                     placeholder="e.g. ₦800,000"
                     value={form.oldPrice}
                     onChange={(e) => updateField("oldPrice", e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
+                    className="w-full text-black px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
                   />
                 </div>
                 <div>
@@ -507,7 +481,7 @@ export default function AddProductPage() {
                       placeholder="e.g. ₦500,000"
                       value={form.salePrice}
                       onChange={(e) => updateField("salePrice", e.target.value)}
-                      className="flex-1 px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
+                      className="flex-1 text-black px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
                     />
                     <Toggle
                       checked={form.hasDiscount}
