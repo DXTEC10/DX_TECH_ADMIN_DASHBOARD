@@ -221,7 +221,7 @@ export default function AddProductPage() {
         isBestSeller: form.isBestSeller,
         isNewArrival: form.isNewArrival,
         mainImage,
-        viewImages,
+        images: viewImages,
       });
       router.push("/");
     } catch (err) {
