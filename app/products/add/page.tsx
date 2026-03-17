@@ -364,15 +364,15 @@ export default function AddProductPage() {
                       className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 appearance-none transition-all text-gray-500"
                     >
                       <option value="">Select category</option>
-                      <option value="SOFA_SET">BEDROOM SETS</option>
-                      <option value="DINING_SET">BLINDS</option>
-                      <option value="BEDROOM_SET">RIGID LOCK</option>
-                      <option value="PARLOR_SET">CENTER TABLE</option>
+                      <option value="BEDROOM_SET">BEDROOM SETS</option>
+                      <option value="BLINDS">BLINDS</option>
+                      <option value="RIGID_LOCK">RIGID LOCK</option>
+                      <option value="CENTER_TABLE">CENTER TABLE</option>
                       <option value="PARLOR_SET">DINNING SETS</option>
-                      <option value="PARLOR_SET">DINNING CHAIR</option>
-                      <option value="DECOR">OUTDOOR</option>
-                      <option value="DECOR">OFICE FURNITURE</option>
-                      <option value="DECOR">TV STANDS</option>
+                      <option value="DINNING_CHAIR">DINNING CHAIR</option>
+                      <option value="OUTDOOR">OUTDOOR</option>
+                      <option value="OFICE_FURNITURE">OFICE FURNITURE</option>
+                      <option value="TV_STAND">TV STANDS</option>
                     </select>
                     <svg
                       className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
