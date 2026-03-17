@@ -366,7 +366,7 @@ export default function AddProductPage() {
                       <option value="BLINDS">BLINDS</option>
                       <option value="RIGID_LOCK">RIGID LOCK</option>
                       <option value="CENTER_TABLE">CENTER TABLE</option>
-                      <option value="PARLOR_SETS">DINING SETS</option>
+                      <option value="DINING_SETS">DINING SETS</option>
                       <option value="DINING_CHAIR">DINING CHAIR</option>
                       <option value="OUTDOOR">OUTDOOR</option>
                       <option value="OFFICE_FURNITURE">OFFICE FURNITURE</option>
