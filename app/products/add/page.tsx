@@ -179,9 +179,7 @@ export default function AddProductPage() {
   });
 
   const [mainImage, setMainImage] = useState<File | null>(null);
-  const [viewImages, setViewImages] = useState<(File | null)[]>(
-    Array(6).fill(null),
-  );
+  const [images, setImages] = useState<(File | null)[]>(Array(6).fill(null));
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -191,8 +189,8 @@ export default function AddProductPage() {
     value: FormState[K],
   ) => setForm((prev) => ({ ...prev, [key]: value }));
 
-  const updateViewImage = (index: number, file: File | null) =>
-    setViewImages((prev) => {
+  const updateImage = (index: number, file: File | null) =>
+    setImages((prev) => {
       const next = [...prev];
       next[index] = file;
       return next;
@@ -221,7 +219,7 @@ export default function AddProductPage() {
         isBestSeller: form.isBestSeller,
         isNewArrival: form.isNewArrival,
         mainImage,
-        images: viewImages,
+        images,
       });
       router.push("/");
     } catch (err) {
@@ -348,7 +346,7 @@ export default function AddProductPage() {
                   value={form.description}
                   onChange={(e) => updateField("description", e.target.value)}
                   rows={3}
-                  className="w-full text-black  px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 resize-none placeholder-gray-300 transition-all"
+                  className="w-full text-black px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 resize-none placeholder-gray-300 transition-all"
                 />
               </div>
 
@@ -399,7 +397,7 @@ export default function AddProductPage() {
                     placeholder="e.g. New, Hot, Sale"
                     value={form.badge}
                     onChange={(e) => updateField("badge", e.target.value)}
-                    className="w-full text-black  px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
+                    className="w-full text-black px-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 bg-gray-50 placeholder-gray-300 transition-all"
                   />
                 </div>
               </div>
@@ -502,30 +500,17 @@ export default function AddProductPage() {
           <div className="bg-white rounded-xl border border-gray-100 p-4">
             <h2 className="text-sm font-bold text-purple-600">View Images</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 mb-3">
-              6 angles for product detail page
+              Up to 6 angles for the product detail page
             </p>
-            <div className="grid grid-cols-4 gap-2 mb-2">
-              {[0, 1, 2, 3].map((i) => (
+            <div className="grid grid-cols-3 gap-2">
+              {Array.from({ length: 6 }, (_, i) => (
                 <div key={i}>
                   <p className="text-[9px] text-gray-400 mb-1 font-medium">
                     View {i + 1}
                   </p>
                   <ImageUploadSlot
                     size="sm"
-                    onFileChange={(f) => updateViewImage(i, f)}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {[4, 5].map((i) => (
-                <div key={i}>
-                  <p className="text-[9px] text-gray-400 mb-1 font-medium">
-                    View {i + 1}
-                  </p>
-                  <ImageUploadSlot
-                    size="sm"
-                    onFileChange={(f) => updateViewImage(i, f)}
+                    onFileChange={(f) => updateImage(i, f)}
                   />
                 </div>
               ))}
