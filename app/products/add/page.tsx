@@ -500,9 +500,7 @@ export default function AddProductPage() {
 
           {/* Product View Images */}
           <div className="bg-white rounded-xl border border-gray-100 p-4">
-            <h2 className="text-sm font-bold text-purple-600">
-              Product View Images
-            </h2>
+            <h2 className="text-sm font-bold text-purple-600">View Images</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 mb-3">
               6 angles for product detail page
             </p>

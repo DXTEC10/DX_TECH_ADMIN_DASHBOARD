@@ -132,7 +132,7 @@ export async function createProduct(
   form.append("isBestSeller", String(payload.isBestSeller ?? false));
   form.append("isNewArrival", String(payload.isNewArrival ?? false));
 
-  form.append("image", payload.mainImage);
+  form.append("mainImage", payload.mainImage);
 
   payload.viewImages?.forEach((file, i) => {
     if (file) form.append(`view${i + 1}`, file);
