@@ -15,7 +15,9 @@ export interface Product {
   isBestSeller: boolean;
   isNewArrival: boolean;
   image: string;
-  viewImages: string[];
+  imageBlurhash: string;
+  images: string[];
+  blurhashes: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -111,7 +113,7 @@ export interface CreateProductPayload {
   isBestSeller?: boolean;
   isNewArrival?: boolean;
   mainImage: File;
-  viewImages?: (File | null)[];
+  images?: (File | null)[];
 }
 
 export async function createProduct(
@@ -134,8 +136,8 @@ export async function createProduct(
 
   form.append("mainImage", payload.mainImage);
 
-  payload.viewImages?.forEach((file, i) => {
-    if (file) form.append(`view${i + 1}`, file);
+  payload.images?.filter(Boolean).forEach((file, i) => {
+    form.append(`view${i + 1}`, file as File);
   });
 
   const res = await fetch(`${BASE_URL}/products`, {
@@ -184,8 +186,8 @@ export async function updateProduct(
     form.append("isNewArrival", String(payload.isNewArrival));
   if (payload.mainImage) form.append("mainImage", payload.mainImage);
 
-  payload.viewImages?.forEach((file, i) => {
-    if (file) form.append(`view${i + 1}`, file);
+  payload.images?.filter(Boolean).forEach((file, i) => {
+    form.append(`view${i + 1}`, file as File);
   });
 
   const res = await fetch(`${BASE_URL}/products/${id}`, {
