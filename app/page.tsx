@@ -297,7 +297,6 @@ export default function ProductsPage() {
     setError(null);
     try {
       let data: Product[] = [];
-      let total = 0;
 
       if (activeTab === "All") {
         const res = await fetchProducts({
@@ -306,23 +305,23 @@ export default function ProductsPage() {
           limit: LIMIT,
         });
         data = res.data;
-        total = res.total ?? res.data.length;
+        // Backend wraps pagination info under res.pagination
+        setTotalPages(res.pagination?.totalPages ?? 1);
       } else if (activeTab === "Promo") {
         const res = await fetchPromoProducts();
         data = res.data;
-        total = res.data.length;
+        setTotalPages(1);
       } else if (activeTab === "Best seller") {
         const res = await fetchBestSellers();
         data = res.data;
-        total = res.data.length;
+        setTotalPages(1);
       } else if (activeTab === "New Arrivals") {
         const res = await fetchNewArrivals();
         data = res.data;
-        total = res.data.length;
+        setTotalPages(1);
       }
 
       setProducts(data);
-      setTotalPages(Math.ceil(total / LIMIT));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load products");
     } finally {
@@ -340,7 +339,8 @@ export default function ProductsPage() {
           fetchBestSellers(),
           fetchNewArrivals(),
         ]);
-        setTotalCount(all.total ?? all.data.length);
+        // Use pagination.totalItems for the real total, not just the page slice
+        setTotalCount(all.pagination?.totalItems ?? all.data.length);
         setPromoCount(promo.data.length);
         setBestSellerCount(best.data.length);
         setNewArrivalCount(newArr.data.length);

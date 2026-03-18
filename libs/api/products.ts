@@ -22,11 +22,18 @@ export interface Product {
   updatedAt: string;
 }
 
+// ✅ Updated to match backend's paginatedResponse shape
+export interface Pagination {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
 export interface ProductsResponse {
   success: boolean;
   data: Product[];
-  total?: number;
-  page?: number;
+  pagination?: Pagination;
 }
 
 export interface ProductResponse {
