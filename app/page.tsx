@@ -176,6 +176,96 @@ const ProductSkeleton = () => (
 const tabs = ["All", "Promo", "Best seller", "New Arrivals"] as const;
 type Tab = (typeof tabs)[number];
 
+// ─── Pagination ───────────────────────────────────────────────────────────────
+
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) => {
+  if (totalPages <= 1) return null;
+
+  const getPages = (): (number | "...")[] => {
+    const pages: (number | "...")[] = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      return pages;
+    }
+
+    pages.push(1);
+    if (currentPage > 4) pages.push("...");
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    if (currentPage < totalPages - 3) pages.push("...");
+    pages.push(totalPages);
+
+    return pages;
+  };
+
+  const navBtnClass = (disabled: boolean) =>
+    `px-3 py-1.5 text-xs rounded-md font-medium transition-all border ${
+      disabled
+        ? "text-gray-300 border-gray-100 cursor-not-allowed bg-white"
+        : "text-gray-500 border-gray-200 hover:border-purple-300 hover:text-purple-600 bg-white hover:bg-purple-50"
+    }`;
+
+  return (
+    <div className="flex items-center justify-center gap-1 mt-6 flex-wrap">
+      {/* Prev */}
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={navBtnClass(currentPage === 1)}
+      >
+        ← Prev
+      </button>
+
+      {/* Page numbers */}
+      {getPages().map((p, i) =>
+        p === "..." ? (
+          <span
+            key={`ellipsis-${i}`}
+            className="px-2 py-1.5 text-xs text-gray-400 select-none"
+          >
+            ...
+          </span>
+        ) : (
+          <button
+            key={p}
+            onClick={() => onPageChange(p as number)}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all border ${
+              currentPage === p
+                ? "bg-[#752B8C] text-white border-[#752B8C] shadow-sm shadow-purple-200"
+                : "text-gray-500 border-gray-200 hover:border-purple-300 hover:text-purple-600 bg-white hover:bg-purple-50"
+            }`}
+          >
+            {p}
+          </button>
+        ),
+      )}
+
+      {/* Next */}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={navBtnClass(currentPage === totalPages)}
+      >
+        Next →
+      </button>
+    </div>
+  );
+};
+
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function ProductsPage() {
@@ -191,34 +281,54 @@ export default function ProductsPage() {
   const [bestSellerCount, setBestSellerCount] = useState(0);
   const [newArrivalCount, setNewArrivalCount] = useState(0);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const LIMIT = 10;
+
+  // ── Reset page when tab or search changes ──────────────────────────────────
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, search]);
+
   // ── Load products based on active tab ──────────────────────────────────────
   const loadProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       let data: Product[] = [];
+      let total = 0;
 
       if (activeTab === "All") {
-        const res = await fetchProducts({ search: search || undefined });
+        const res = await fetchProducts({
+          search: search || undefined,
+          page: currentPage,
+          limit: LIMIT,
+        });
         data = res.data;
+        total = res.total ?? res.data.length;
       } else if (activeTab === "Promo") {
         const res = await fetchPromoProducts();
         data = res.data;
+        total = res.data.length;
       } else if (activeTab === "Best seller") {
         const res = await fetchBestSellers();
         data = res.data;
+        total = res.data.length;
       } else if (activeTab === "New Arrivals") {
         const res = await fetchNewArrivals();
         data = res.data;
+        total = res.data.length;
       }
 
       setProducts(data);
+      setTotalPages(Math.ceil(total / LIMIT));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load products");
     } finally {
       setLoading(false);
     }
-  }, [activeTab, search]);
+  }, [activeTab, search, currentPage]);
 
   // ── Load stat counts on mount ──────────────────────────────────────────────
   useEffect(() => {
@@ -230,7 +340,7 @@ export default function ProductsPage() {
           fetchBestSellers(),
           fetchNewArrivals(),
         ]);
-        setTotalCount(all.data.length);
+        setTotalCount(all.total ?? all.data.length);
         setPromoCount(promo.data.length);
         setBestSellerCount(best.data.length);
         setNewArrivalCount(newArr.data.length);
@@ -264,7 +374,7 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-gray-50">
       <TopBar />
 
-      <div className=" mx-auto max-w-6xl px-5 py-5">
+      <div className="mx-auto max-w-6xl px-5 py-5">
         {/* Page Header */}
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -277,7 +387,7 @@ export default function ProductsPage() {
           </div>
           <Link
             href="/products/add"
-            className="inline-flex items-center gap-1.5 bg-[#752B8C]  text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm shadow-purple-200"
+            className="inline-flex items-center gap-1.5 bg-[#752B8C] text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm shadow-purple-200"
           >
             <svg
               className="w-3.5 h-3.5"
@@ -423,6 +533,15 @@ export default function ProductsPage() {
               </div>
             )}
           </div>
+
+          {/* Pagination — only shown on All tab */}
+          {!loading && activeTab === "All" && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       </div>
     </div>
