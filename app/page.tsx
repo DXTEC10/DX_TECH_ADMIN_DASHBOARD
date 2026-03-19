@@ -196,15 +196,15 @@ const ProductCard = ({ product, onDelete }: ProductCardProps) => {
             {product.salePrice ? (
               <>
                 <span className="text-xs text-gray-400 line-through">
-                  {product.price}
+                  ₦{product.price}
                 </span>
                 <span className="text-xs font-medium text-[#BB3C2D]">
-                  {product.salePrice}
+                  ₦{product.salePrice}
                 </span>
               </>
             ) : (
               <span className="text-xs font-semibold text-gray-700">
-                {product.price}
+                ₦{product.price}
               </span>
             )}
           </div>
