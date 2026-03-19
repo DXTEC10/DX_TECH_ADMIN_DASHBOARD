@@ -297,7 +297,7 @@ export default function EditProductPage() {
       });
 
       setSuccessMsg("Product updated successfully!");
-      setTimeout(() => router.push("/products"), 1400);
+      setTimeout(() => router.push("/"), 1400);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Update failed");
     } finally {
