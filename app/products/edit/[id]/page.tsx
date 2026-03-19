@@ -3,38 +3,21 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  price: string;
-  oldPrice: string | null;
-  salePrice: string | null;
-  hasDiscount: boolean;
-  badge: string | null;
-  image: string;
-  images: string[];
-  isPromo: boolean;
-  isBestSeller: boolean;
-  isNewArrival: boolean;
-  slug: string;
-}
+import { fetchProduct, updateProduct, type Product } from "@/libs/api/products";
 
 // ─── Category options (match your backend enum) ────────────────────────────
 
 const CATEGORIES = [
   { value: "", label: "Select category" },
+  { value: "BEDROOM_SETS", label: "Bedroom Sets" },
+  { value: "BLINDS", label: "Blinds" },
+  { value: "RIGID_LOCK", label: "Rigid Lock" },
+  { value: "CENTER_TABLE", label: "Center Table" },
   { value: "DINING_SET", label: "Dining Set" },
-  { value: "SOFA", label: "Sofa" },
-  { value: "BED", label: "Bed" },
-  { value: "WARDROBE", label: "Wardrobe" },
-  { value: "OFFICE", label: "Office" },
-  { value: "DECOR", label: "Decor" },
+  { value: "DINING_CHAIR", label: "Dining Chair" },
   { value: "OUTDOOR", label: "Outdoor" },
+  { value: "OFFICE_FURNITURE", label: "Office Furniture" },
+  { value: "TV_STANDS", label: "TV Stands" },
 ];
 
 // ─── TopBar ───────────────────────────────────────────────────────────────────
@@ -95,7 +78,6 @@ const ImageSlot = ({
                 Change
               </span>
             </div>
-            {/* Remove button */}
             {file && (
               <button
                 type="button"
@@ -242,7 +224,7 @@ export default function EditProductPage() {
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [isNewArrival, setIsNewArrival] = useState(false);
 
-  // ── Existing image URLs (from the DB) ──────────────────────────────────────
+  // ── Existing image URLs (from DB) ──────────────────────────────────────────
   const [existingMain, setExistingMain] = useState("");
   const [existingViews, setExistingViews] = useState<string[]>(
     Array(6).fill(""),
@@ -254,16 +236,14 @@ export default function EditProductPage() {
     Array(6).fill(null),
   );
 
-  // ─── Load product ──────────────────────────────────────────────────────────
+  // ─── Load product using fetchProduct from @/libs/api/products ─────────────
   useEffect(() => {
     if (!productId) return;
     (async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/products/${productId}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
+        const json = await fetchProduct(productId);
         const p: Product = json.data;
 
         setName(p.name ?? "");
@@ -278,7 +258,7 @@ export default function EditProductPage() {
         setIsBestSeller(p.isBestSeller ?? false);
         setIsNewArrival(p.isNewArrival ?? false);
         setExistingMain(p.image ?? "");
-        // Pad or trim to exactly 6 slots
+
         const views = [...(p.images ?? [])];
         while (views.length < 6) views.push("");
         setExistingViews(views.slice(0, 6));
@@ -290,7 +270,7 @@ export default function EditProductPage() {
     })();
   }, [productId]);
 
-  // ─── Submit via multipart/form-data (PATCH /:id) ──────────────────────────
+  // ─── Submit using updateProduct from @/libs/api/products ─────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -298,39 +278,23 @@ export default function EditProductPage() {
     setSuccessMsg(null);
 
     try {
-      const fd = new FormData();
-
-      // Text fields — only append if non-empty (backend treats missing as "no change")
-      if (name) fd.append("name", name);
-      if (description) fd.append("description", description);
-      if (category) fd.append("category", category);
-      if (price) fd.append("price", price);
-      fd.append("oldPrice", oldPrice); // allow clearing → send ""
-      fd.append("salePrice", salePrice); // allow clearing → send ""
-      fd.append("badge", badge); // allow clearing → send ""
-
-      // Booleans — always send so backend can toggle them
-      fd.append("hasDiscount", String(hasDiscount));
-      fd.append("isPromo", String(isPromo));
-      fd.append("isBestSeller", String(isBestSeller));
-      fd.append("isNewArrival", String(isNewArrival));
-
-      // Images — only append newly selected files
-      if (mainFile) fd.append("mainImage", mainFile);
-      viewFiles.forEach((file, i) => {
-        if (file) fd.append(`view${i + 1}`, file);
+      await updateProduct(productId, {
+        name,
+        description,
+        category,
+        price,
+        oldPrice: oldPrice || undefined,
+        salePrice: salePrice || undefined,
+        badge: badge || undefined,
+        hasDiscount,
+        isPromo,
+        isBestSeller,
+        isNewArrival,
+        mainImage: mainFile ?? undefined,
+        // Only pass view files that were newly selected; nulls are filtered
+        // inside updateProduct already via payload.images?.filter(Boolean)
+        images: viewFiles,
       });
-
-      const res = await fetch(`/api/products/${productId}`, {
-        method: "PATCH",
-        body: fd,
-        // Do NOT set Content-Type header — browser sets it with boundary automatically
-      });
-
-      if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json.message ?? `HTTP ${res.status}`);
-      }
 
       setSuccessMsg("Product updated successfully!");
       setTimeout(() => router.push("/products"), 1400);
@@ -437,19 +401,18 @@ export default function EditProductPage() {
               ))}
             </div>
             <div className="space-y-4">
-              <div className="bg-white rounded-xl border border-gray-100 p-4 h-48 bg-gray-100" />
-              <div className="bg-white rounded-xl border border-gray-100 p-4 h-36 bg-gray-100" />
+              <div className="h-48 bg-gray-100 rounded-xl" />
+              <div className="h-36 bg-gray-100 rounded-xl" />
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-3 gap-5">
-              {/* ── Left column: main fields ───────────────────────────── */}
+              {/* ── Left column ────────────────────────────────────────── */}
               <div className="col-span-2 space-y-5">
-                {/* Basic info card */}
+                {/* Basic info */}
                 <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
                   <SectionTitle>Basic Information</SectionTitle>
-
                   <Input
                     label="Product Name"
                     required
@@ -457,7 +420,6 @@ export default function EditProductPage() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Bronze Sofa Set"
                   />
-
                   <div>
                     <label className="block text-[11px] font-semibold text-gray-600 mb-1.5">
                       Description
@@ -470,7 +432,6 @@ export default function EditProductPage() {
                       className="w-full text-sm text-gray-800 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-300 transition-all resize-none placeholder:text-gray-300"
                     />
                   </div>
-
                   <div>
                     <label className="block text-[11px] font-semibold text-gray-600 mb-1.5">
                       Category
@@ -487,7 +448,6 @@ export default function EditProductPage() {
                       ))}
                     </select>
                   </div>
-
                   <Input
                     label="Badge"
                     value={badge}
@@ -497,10 +457,9 @@ export default function EditProductPage() {
                   />
                 </div>
 
-                {/* Pricing card */}
+                {/* Pricing */}
                 <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
                   <SectionTitle>Pricing</SectionTitle>
-
                   <div className="grid grid-cols-3 gap-3">
                     <Input
                       label="Price"
@@ -522,7 +481,6 @@ export default function EditProductPage() {
                       placeholder="e.g. ₦800,000"
                     />
                   </div>
-
                   <Toggle
                     label="Has Discount"
                     description="Mark this product as discounted"
@@ -531,7 +489,7 @@ export default function EditProductPage() {
                   />
                 </div>
 
-                {/* View images card */}
+                {/* View images */}
                 <div className="bg-white rounded-xl border border-gray-100 p-5">
                   <SectionTitle>Additional View Images</SectionTitle>
                   <p className="text-[10px] text-gray-400 mb-4">
@@ -552,7 +510,7 @@ export default function EditProductPage() {
                 </div>
               </div>
 
-              {/* ── Right column: image + toggles + actions ────────────── */}
+              {/* ── Right column ───────────────────────────────────────── */}
               <div className="space-y-4">
                 {/* Main image */}
                 <div className="bg-white rounded-xl border border-gray-100 p-4">
