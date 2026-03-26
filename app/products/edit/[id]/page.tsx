@@ -323,7 +323,7 @@ export default function EditProductPage() {
         {/* Breadcrumb */}
         <button
           type="button"
-          onClick={() => router.push("/products")}
+          onClick={() => router.push("/")}
           className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#752B8C] transition-colors mb-5"
         >
           <svg
