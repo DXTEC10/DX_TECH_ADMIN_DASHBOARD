@@ -133,7 +133,7 @@ const TopBar = () => (
   <header className="bg-white border-b border-gray-200 flex items-center px-5 h-17 sticky top-0 z-50">
     <div className="rounded mr-6xl flex items-center">
       <Image
-        src={"/dx-logo.jpeg"}
+        src={"/dx-logo.svg"}
         width={100}
         height={100}
         alt="Logo"
@@ -503,7 +503,7 @@ export default function AddProductPage() {
               Up to 6 angles for the product detail page
             </p>
             <div className="grid grid-cols-3 gap-2">
-              {Array.from({ length: 6 }, (_, i) => (
+              {Array.from({ length: 4 }, (_, i) => (
                 <div key={i}>
                   <p className="text-[9px] text-gray-400 mb-1 font-medium">
                     View {i + 1}

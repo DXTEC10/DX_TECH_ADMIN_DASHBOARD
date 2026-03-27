@@ -393,7 +393,7 @@ export default function EditProductPage() {
         {loading ? (
           <div className="grid grid-cols-3 gap-5 animate-pulse">
             <div className="col-span-2 bg-white rounded-xl border border-gray-100 p-6 space-y-4">
-              {Array.from({ length: 6 }).map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="space-y-1.5">
                   <div className="h-2 bg-gray-100 rounded w-20" />
                   <div className="h-8 bg-gray-100 rounded" />
