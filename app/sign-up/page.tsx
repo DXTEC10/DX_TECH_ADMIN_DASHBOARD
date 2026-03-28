@@ -33,7 +33,11 @@ const SignupPage = () => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-
+    if (formData.email !== process.env.NEXT_PUBLIC_ALLOWED_EMAIL) {
+      setError("Registration is not allowed for this email address.");
+      setIsLoading(false);
+      return;
+    }
     try {
       const response = await fetch(
         "https://dxtechbackend-stagging.up.railway.app/api/auth/signup",
