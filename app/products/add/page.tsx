@@ -206,6 +206,8 @@ export default function AddProductPage() {
 
     setSubmitting(true);
     try {
+      const allImages = [mainImage, ...images.filter(Boolean)] as File[];
+
       await createProduct({
         name: form.name,
         description: form.description || undefined,
@@ -219,7 +221,7 @@ export default function AddProductPage() {
         isBestSeller: form.isBestSeller,
         isNewArrival: form.isNewArrival,
         mainImage,
-        images,
+        images: allImages,
       });
       router.push("/");
     } catch (err) {
