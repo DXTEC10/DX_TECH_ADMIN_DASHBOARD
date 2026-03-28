@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Eye,
-  EyeOff,
-  Lock,
-  AtSign,
-  Hash,
-  ArrowRight,
-  AlertCircle,
-} from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -19,10 +11,8 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [isIdMode, setIsIdMode] = useState(false);
-
   const [formData, setFormData] = useState({
-    organisationName: "",
+    email: "",
     password: "",
   });
 
@@ -44,8 +34,10 @@ const LoginPage = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Invalid credentials.");
 
-      if (data.token) localStorage.setItem("dx_token", data.token);
-      router.push("/");
+      if (data.token) {
+        document.cookie = `dx_token=${data.token}; path=/; max-age=${60 * 60 * 24}`;
+        window.location.href = "/";
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -86,28 +78,23 @@ const LoginPage = () => {
           )}
 
           <form className="mt-10 space-y-5" onSubmit={handleLogin}>
-            {/* IDENTIFIER FIELD */}
+            {/* EMAIL FIELD */}
             <div className="group">
               <label className="block text-sm font-bold text-black mb-1.5">
-                {isIdMode ? "Organisation ID" : "Organisation name"}
+                Email
               </label>
               <div className="relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-black/40">
-                  {isIdMode ? <Hash size={18} /> : <AtSign size={18} />}
+                  <Mail size={18} />
                 </div>
                 <input
-                  type="text"
+                  type="email"
                   required
-                  placeholder={
-                    isIdMode ? "Organisation ID" : "Organisation name"
-                  }
+                  placeholder="your@email.com"
                   className="w-full pl-12 pr-4 py-3.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all text-black font-medium placeholder:text-black/30"
-                  value={formData.organisationName}
+                  value={formData.email}
                   onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      organisationName: e.target.value,
-                    })
+                    setFormData({ ...formData, email: e.target.value })
                   }
                 />
               </div>
@@ -166,26 +153,6 @@ const LoginPage = () => {
             >
               {isLoading ? "Signing in..." : "Sign in"}
               {!isLoading && <ArrowRight size={18} />}
-            </button>
-
-            {/* SEPARATOR */}
-            <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-gray-100"></div>
-              <span className="flex-shrink mx-4 text-black/20 text-sm font-bold uppercase tracking-widest">
-                or
-              </span>
-              <div className="flex-grow border-t border-gray-100"></div>
-            </div>
-
-            {/* TOGGLE BUTTON */}
-            <button
-              type="button"
-              onClick={() => setIsIdMode(!isIdMode)}
-              className="w-full py-4 bg-gray-50 text-black border border-gray-100 rounded-xl font-bold hover:bg-gray-100 transition-all"
-            >
-              {isIdMode
-                ? "Sign in with organisation name"
-                : "Sign in with organisation ID"}
             </button>
           </form>
 
