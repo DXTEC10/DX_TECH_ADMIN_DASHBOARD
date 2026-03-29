@@ -35,8 +35,14 @@ const LoginPage = () => {
       if (!response.ok) throw new Error(data.message || "Invalid credentials.");
 
       if (data.token) {
-        document.cookie = `dx_token=${data.token}; path=/; max-age=${60 * 60 * 24}`;
-        window.location.href = "/";
+        // 1. Set the cookie with proper production flags
+        const isSecure = window.location.protocol === "https:";
+        const cookieBase = `dx_token=${data.token}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax`;
+        document.cookie = isSecure ? `${cookieBase}; Secure` : cookieBase;
+
+        // 2. Give the browser a tiny moment to register the cookie, then redirect
+        router.refresh();
+        router.push("/");
       }
     } catch (err: any) {
       setError(err.message);
