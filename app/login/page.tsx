@@ -23,6 +23,7 @@ const LoginPage = () => {
     setError(null);
 
     try {
+      // 1. Authenticate against your external API
       const response = await fetch(
         "https://dxtechbackend-stagging.up.railway.app/api/auth/login",
         {
@@ -36,21 +37,18 @@ const LoginPage = () => {
       if (!response.ok) throw new Error(data.message || "Invalid credentials.");
 
       if (data.token) {
-        // Use a more standard cookie string
-        const maxAge = 60 * 60 * 24; // 24 hours
-        const isSecure = window.location.protocol === "https:";
+        // 2. Hand the token to your Next.js API route to set a proper
+        //    httpOnly cookie via Set-Cookie header (not document.cookie)
+        const sessionRes = await fetch("/api/auth/session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: data.token }),
+        });
 
-        // Setting cookie with clear attributes
-        document.cookie = `dx_token=${data.token}; path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? "; Secure" : ""}`;
+        if (!sessionRes.ok) throw new Error("Failed to establish session.");
 
-        // Force a hard refresh or use a slight delay to ensure middleware sees the cookie
-        router.refresh();
-
-        // Using window.location.href is sometimes more reliable for
-        // auth redirects to ensure the middleware picks up the new state
-        setTimeout(() => {
-          router.push("/");
-        }, 100);
+        // 3. Hard navigate — ensures middleware re-evaluates with the new cookie
+        window.location.href = "/";
       }
     } catch (err: any) {
       setError(err.message);
