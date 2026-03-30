@@ -136,7 +136,7 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
+            {/* <div className="flex items-center justify-between pt-1">
               <label className="flex items-center gap-2 text-sm text-black font-medium cursor-pointer">
                 <input
                   type="checkbox"
@@ -150,7 +150,7 @@ const LoginPage = () => {
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
 
             {/* PRIMARY BUTTON */}
             <button
