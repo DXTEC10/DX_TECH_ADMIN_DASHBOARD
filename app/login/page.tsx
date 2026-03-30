@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -56,14 +57,7 @@ const LoginPage = () => {
       <div className="flex flex-1 flex-col justify-center px-8 py-12 sm:px-16 lg:px-24 xl:px-32">
         {/* LOGO */}
         <div className="mb-10">
-          <div className="flex items-center gap-2 bg-[#6D318C] text-white px-4 py-2 w-fit rounded-lg">
-            <span className="font-black text-2xl italic tracking-tighter">
-              X
-            </span>
-            <span className="text-[11px] tracking-[0.3em] font-bold border-l border-white/30 pl-2">
-              FURNITURE
-            </span>
-          </div>
+          <Image src={"/dx-logo.svg"} width={100} height={50} alt="DX Logo" />
         </div>
 
         <div className="max-w-md w-full mx-auto md:mx-0">
@@ -162,7 +156,7 @@ const LoginPage = () => {
             </button>
           </form>
 
-          <footer className="mt-12 text-center md:text-left">
+          {/* <footer className="mt-12 text-center md:text-left">
             <p className="text-sm text-black/60 font-medium">
               Don't have an account yet?
               <Link
@@ -172,7 +166,7 @@ const LoginPage = () => {
                 Signup now
               </Link>
             </p>
-          </footer>
+          </footer> */}
         </div>
       </div>
 
