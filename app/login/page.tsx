@@ -23,7 +23,7 @@ const LoginPage = () => {
     setError(null);
 
     try {
-      // 1. Authenticate against your external API
+      // Step 1: authenticate against your backend
       const response = await fetch(
         "https://dxtechbackend-stagging.up.railway.app/api/auth/login",
         {
@@ -37,17 +37,20 @@ const LoginPage = () => {
       if (!response.ok) throw new Error(data.message || "Invalid credentials.");
 
       if (data.token) {
-        // 2. Hand the token to your Next.js API route to set a proper
-        //    httpOnly cookie via Set-Cookie header (not document.cookie)
+        // Step 2: send token to YOUR Next.js API route
+        // This sets an httpOnly cookie via Set-Cookie header (server-side)
+        // so middleware sees it immediately on the next request
         const sessionRes = await fetch("/api/auth/session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: data.token }),
         });
 
-        if (!sessionRes.ok) throw new Error("Failed to establish session.");
+        if (!sessionRes.ok) throw new Error("Failed to create session.");
 
-        // 3. Hard navigate — ensures middleware re-evaluates with the new cookie
+        // Step 3: hard navigate — NOT router.push()
+        // window.location.href forces a brand new request
+        // so middleware runs fresh with the cookie already set
         window.location.href = "/";
       }
     } catch (err: any) {
@@ -56,7 +59,6 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="flex min-h-screen flex-col md:flex-row bg-white font-sans">
       <div className="flex flex-1 flex-col justify-center px-8 py-12 sm:px-16 lg:px-24 xl:px-32">

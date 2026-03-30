@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtectedRoute =
-    pathname === "/https://dx-tech-admin-dashboard.vercel.app" ||
+    pathname === "/" ||
     pathname.startsWith("/products") ||
     pathname.startsWith("/admin");
 
