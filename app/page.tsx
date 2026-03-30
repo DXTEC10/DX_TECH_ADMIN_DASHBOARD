@@ -353,13 +353,10 @@ export default function ProductsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const LIMIT = 10;
 
-  const handleLogout = () => {
-    document.cookie =
-      "dx_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    router.push("/login");
-    router.refresh();
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
   };
-
   const loadProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
