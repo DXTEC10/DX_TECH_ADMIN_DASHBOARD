@@ -9,19 +9,25 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/products") ||
     pathname.startsWith("/admin");
 
-  const isAuthRoute = pathname === "/login" || pathname === "/sign-up";
+  const isAuthRoute = pathname === "/login";
 
   if (isProtectedRoute && !token) {
-    const loginUrl = new URL("/login", request.url);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(new URL("/login", request.url));
+    response.headers.set("Cache-Control", "no-store, must-revalidate");
+    return response;
   }
 
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    const response = NextResponse.redirect(new URL("/", request.url));
+    response.headers.set("Cache-Control", "no-store, must-revalidate");
+    return response;
   }
 
-  // ← Add this: prevents Vercel edge from caching protected responses
-  const res = NextResponse.next();
-  res.headers.set("Cache-Control", "no-store, must-revalidate");
-  return res;
+  const response = NextResponse.next();
+  response.headers.set("Cache-Control", "no-store, must-revalidate");
+  return response;
 }
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.svg$).*)"],
+};
